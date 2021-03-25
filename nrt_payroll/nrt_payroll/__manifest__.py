@@ -1,0 +1,47 @@
+# -*- coding: utf-8 -*-
+
+{
+    'name': 'Neurotech Payroll',
+    'version': '12.1.2',
+    'summary': """Module de paie pour Neurotech""",
+    'description': """Module de paie pour Neurotech""",
+    'category': 'Human Resources',
+    'author': 'Optesis SA',
+    'maintainer': 'Optesis',
+    'company': 'Optesis SA',
+    'website': 'https://www.optesis.com',
+    'depends': [
+                'base', 'hr', 'hr_payroll', 'hr_contract', 'hr_holidays','hr_payroll_account','nrt_hr_base','web'
+                ],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/custom_paper_format.xml',
+        'data/custom_format_paper_bulletin.xml',
+        'data/salary_rule_data.xml',
+        'data/convention_collective_data.xml',
+        'views/custom_external_layout_bulletin.xml',
+        'views/hr_payslip_view.xml',
+        'views/hr_contract_view.xml',
+        'views/report_declaration_retenues.xml',
+        'views/report_transfer_order.xml',
+        'views/report_cotisation_ipres.xml',
+        'views/report_securite_sociale.xml',
+        'views/convention_view.xml',
+        'views/account_move_view.xml',
+        'views/hr_payslip_action.xml',
+        'views/batch_payslip_fixed.xml',
+        'wizard/transfer_order.xml',
+        'wizard/securite_sociale.xml',
+        'wizard/declaration_retenues.xml',
+        'wizard/cotisation_ipres.xml',
+        'views/menu_reports_payslip.xml',
+	    'views/template.xml',
+	    'views/report_payslip_bulletin.xml',
+        'views/hr_employee_view.xml'
+        ],
+    'images': ['static/description/banner.jpg'],
+    'license': 'AGPL-3',
+    'installable': True,
+    'auto_install': False,
+    'application': False,
+}

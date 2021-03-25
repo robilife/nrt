@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      <act_window id="hr_payslip_reporting" name="Reporting" res_model="hr.payslip.line" view_mode="pivot,graph" />
+
+        <menuitem id="menu_nrt_payroll_reporting"
+          name="Rapports"
+          parent="hr_payroll.menu_hr_payroll_root"
+                  groups="nrt_hr_base.group_nrt_adminin_personnel"
+          sequence="201"/>
+
+          <menuitem
+          id="payslip_lines_cotisation_ipres_value_menu_action"
+          action="payslip_lines_cotisation_ipres_value"
+          parent="menu_nrt_payroll_reporting"
+          sequence="50"/>
+
+          <menuitem
+          id="payslip_lines_securite_sociale_value_menu_action"
+          action="payslip_lines_securite_sociale_value"
+          parent="menu_nrt_payroll_reporting"
+          sequence="60"/>
+
+          <!--<menuitem
+          id="launch_transfer_order_wizard_menu_action"
+          action="launch_transfer_order_wizard"
+          parent="menu_nrt_payroll_reporting"
+          sequence="70"/>-->
+
+          <menuitem
+          id="launch_declaration_retenues_menu_action"
+          action="launch_declaration_retenues"
+          parent="menu_nrt_payroll_reporting"
+          sequence="80"/>
+
+          <menuitem
+          id="reporting_menu_action"
+          action="hr_payslip_reporting"
+          parent="menu_nrt_payroll_reporting"
+          sequence="90"/>
+    </data>
+</odoo>

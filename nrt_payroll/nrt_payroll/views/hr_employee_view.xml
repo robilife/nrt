@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<record model="ir.ui.view" id="employee_inherit_wiew_form">
+            <field name="name">hr.employee</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+              <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Période d'essai">
+                        <field name="contract_start"/>
+                        <field name="trimf"/>
+                        <field name="nb_part"/>
+                    </group>
+              </xpath>
+            </field>
+</record>
+    </data>
+</odoo>

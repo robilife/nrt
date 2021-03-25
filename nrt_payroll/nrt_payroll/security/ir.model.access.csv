@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+        access_optesis_convention,optesis.convention,nrt_payroll.model_optesis_convention,base.group_user,1,1,1,1
+        access_line_optesis_convention,line.optesis.convention,nrt_payroll.model_line_optesis_convention,base.group_user,1,1,1,1

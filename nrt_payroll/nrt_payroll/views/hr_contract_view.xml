@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="hr_contract_bonus_form_inherit" model="ir.ui.view">
+            <field name="name">hr.contract.view.bonus.form.inherit</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='information']" position="after">
+                    <page string="Element de salaire">
+                        <group string="Element du salarié">
+                            <group>
+                                <field name="sursalaire"/>
+                                <field name="carburant"/>
+                                <field name="carburant_non_imposable"/>
+                            </group>
+                            <group>
+                                <!--<field name="remboursement"/>-->
+                                <field name="rapel_salaire"/>
+                                <field name="avantage_nature"/>
+                            </group>
+                        </group>
+
+                        <group string="Primes">
+                            <group>
+                                <field name="prime_exc"/>
+                                <field name="prime_resp"/>
+                                <field name="prime_salissure"/>
+                                <field name="restauration"/>
+                                <field name="ticket_restau"/>
+                            </group>
+                            <group>
+                                <field name="prime_rendement"/>
+                                <field name="prime_risque"/>
+                                <field name="prime_transport"/>
+                                <field name="prime_logement"/>
+                            </group>
+                        </group>
+
+                        <group string="Avances">
+                            <group>
+                                <field name="avance"/>
+                                <field name="avance_tabaski"/>
+                            </group>
+                            <group>
+                                <field name="avance_korite"/>
+                                <field name="avance_noel"/>
+                            </group>
+                        </group>
+
+                        <group string="Retenues">
+                            <group>
+                                <field name="retenu_sante"/>
+                                <field name="remboursement_formation"/>
+                            </group>
+                            <group>
+                                <field name="retenue_car"/>
+                                <field name="retenu"/>
+                            </group>
+                        </group>
+
+                        <group string="Indémités">
+                            <group>
+                                <field name="indemite_preavis"/>
+                                <field name="indemite_compensation_preavis"/>
+                            </group>
+                            <group>
+                                <field name="indemite_kilometrique"/>
+                                <field name="indemnite_conges"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+
+                <field name="struct_id" position="after">
+                    <field name="convention_id"/>
+                </field>
+
+                <xpath expr="//page[@name='other']/group/group/div" position="after">
+                    <field name="motif"/>
+                    <field name="dateAnciennete" required="1"/>
+                </xpath>
+
+                <xpath expr="//form/sheet/group/group/field[1]" position="before">
+                    <field name="typeContract" required="1"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

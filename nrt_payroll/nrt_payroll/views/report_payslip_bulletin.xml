@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="paperformat_portrait_neurotech" model="report.paperformat">
+            <field name="name">European A4 Portrait</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">5</field>
+            <field name="margin_bottom">20</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+        <report
+                id="payslip_details_report"
+                model="hr.payslip"
+                string="Bulletin de paie"
+                report_type="qweb-pdf"
+                paperformat="nrt_payroll.paperformat_portrait_neurotech"
+                name="nrt_payroll.report_payroll_neurotech"
+                file="nrt_payroll.report_payroll_neurotech"
+        />
+
+        <template id="nrt_payroll.report_payroll_neurotech">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="nrt_payroll.headerless_layout">
+                        <t t-set="o" t-value="o.with_context({'lang': lang})"/>
+                        <div class="page">
+                            <t t-call="nrt_payroll.header_new"/>
+                            <div>
+                                <div class="bpro_header_left">
+                                    <center>
+                                        <img t-if="o.company_id.logo"
+                                             t-att-src="image_data_uri(o.company_id.logo)"
+                                             style="max-height: 110px;max-width: 120px;" alt="Logo"/>
+                                    </center>
+                                    <div>
+                                        <div>
+                                            <center>
+                                                <span class="bpro_text_italic" style="padding-left:25px">
+                                                    <span t-field="o.company_id.street"/>
+                                                </span>
+                                            </center>
+                                            </div>
+                                        <div>
+                                            <center>
+                                                <span style="font-size:20px;height: 20px">BULLETIN DE PAIE</span>
+                                            </center>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <table class="bpro-width">
+                                            <tbody>
+                                                <tr class="nrt-background" style="border-bottom:1px solid">
+                                                    <td style="text-align:left;padding-left:10px">Matricule</td>
+                                                    <td style="text-align:center">IR</td>
+                                                    <td style="padding-left:10px">Date d'entrée</td>
+                                                    <td class="bpro_padding_category">Contrat</td>
+                                                    <td style="text-align:right;padding-right:10px">Statut</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left-italic"><span t-field="o.employee_id.serial_number"/></td>
+                                                    <td class="text-center-italic"><span t-field="o.nb_part_of_payslip"/></td>
+                                                    <td class="text-center-italic"><span t-field="o.employee_id.contract_start"/></td>
+                                                    <td class="text-center-italic"><span t-esc="get_contract_type(o.employee_id.contrat_type)"/></td>
+                                                    <td class="text-right-italic"><span t-esc="get_marital(o.employee_id.marital)"/></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <table class="bpro-width">
+                                            <tbody>
+                                                <tr class="nrt-background" style="border-bottom:1px solid">
+                                                    <td class="text-left">Intitulé du poste</td>
+                                                    <td style="text-align:center">TRIMF</td>
+                                                    <td style="text-align:right;padding-right:10px">Ancienneté</td>
+                                                </tr>
+                                                <tr class="bpro_qualification">
+                                                    <td class="text-left-italic">
+                                                        <span t-field="o.employee_id.job_title"/>
+                                                    </td>
+                                                    <td class="text-center-italic">
+                                                        <span t-field="o.employee_id.trimf"/>
+                                                    </td>
+                                                    <td class="text-right-italic">
+                                                        <span t-field="o.seniority_char"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="nrt-background" style="border-bottom:1px solid">
+                                                    <td class="bpro_padding_imp text-left" colspan="2">Direction/Département</td>
+                                                    <td style="text-align:right;padding-right:10px">Catégorie</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-left-italic" colspan="2">
+                                                        <span t-field="o.employee_id.department_id.name"/>
+                                                    </td>
+                                                    <td class="text-right-italic" style="padding-right:30px">
+                                                        <span t-field="o.contract_id.convention_id"/>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                                <div class="bpro_header_right">
+                                    <table class="bpro-width">
+                                        <tbody>
+                                            <tr>
+                                                <th colspan="2" class="bpro_head bpro_head_period bpro-background">
+                                                    Période de Paie
+                                                </th>
+                                            </tr>
+                                            <tr style="border-bottom:1px solid">
+                                                <td class="bpro_detail bpro_head " colspan="2">
+                                                    <span t-esc="time.strftime('%B %Y',time.strptime(str(o.date_from),'%Y-%m-%d')).capitalize()"/>
+                                                </td>
+                                            </tr>
+                                            <tr class="bpro_header_border bpro-background">
+                                                <th class="bpro_head" colspan="2">Date et méthode de paiement</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="date-method-paiement" colspan="2">
+                                                     <span t-field="o.date_to"/>
+                                                     par
+                                                     <span t-esc="get_payment_mode(o.typePaiement)"/>
+                                                 </th>
+                                            </tr>
+
+                                            <tr class="bpro_header_border">
+                                                <th class="bpro_head" colspan="2">Convention Collective Commerce</th>
+                                            </tr>
+                                            <tr class="bpro-background" style="border-bottom:1px solid">
+                                                <td class="bpro_padding_convention">N° IPRES Employeur</td>
+                                                <td class="bpro_padding_convention-right">N° CSS Employeur</td>
+                                            </tr>
+                                            <tr class="bpro_header_border">
+                                                <td class="bpro_padding_convention" style="border-bottom:1px solid">
+                                                    <span t-field="o.employee_id.company_id.num_ipress"/>
+                                                </td>
+                                                <td class="bpro_padding_convention-right" style="border-bottom:1px solid">
+                                                   <span t-field="o.employee_id.company_id.num_css"/>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <div>
+                                            <center>
+                                                <span>
+                                                    <span t-field="o.employee_id.name" />
+                                                </span>
+                                            </center>
+                                            <center>
+                                                <span class="bpro_text_italic" t-field="o.employee_id.address"/>
+                                            </center>
+                                        </div>
+                                </div>
+                            </div>
+                            <div>
+                                <table class="bpro_contained bpro-width">
+                                    <tr>
+                                        <th rowspan="2" class="bpro_padding_left bproll-header-padding"
+                                            style="padding-left:5px;padding-top:20px">Code
+                                        </th>
+                                        <th rowspan="2" class="bpro_head bpro_head_label_first bproll-header-padding">
+                                            Libelle
+                                        </th>
+                                        <th rowspan="2"
+                                            class="bpro_border_left bpro_space text-right bpro_head_label_second bproll-header-padding"
+                                            style="text-align:center">Nombre
+                                        </th>
+                                        <th rowspan="2"
+                                            class="bpro_border_left bpro_space text-right bpro_head_label_second bproll-header-padding"
+                                            style="text-align:center">Base
+                                        </th>
+                                        <th rowspan="2"
+                                            class="bpro_border_left bpro_head  bpro_head_label_third bproll-header-padding"
+                                            style="text-align:center">Taux
+                                        </th>
+                                        <th colspan="2"
+                                            class="bpro_border_left bpro_head bprol_head_label_fourth"
+                                            style="border-right:1px solid">
+                                            Part. Salariale
+                                        </th>
+                                        <th rowspan="2"
+                                            style="text-align:center;padding-left:15px;padding-right:15px;padding-bottom:30px">
+                                            Charges Patronales
+                                        </th>
+                                    </tr>
+                                    <tr class="bpro_border_head">
+                                        <th class="bproll_right_head bpro_head_label_third">Gain</th>
+                                        <th class="text-right bpro_head_label_third"
+                                            style="border-right:1px solid">Retenues
+                                        </th>
+
+                                    </tr>
+                                    <tbody>
+                                        <tr class="bproll-espace-top" t-foreach="get_payslip_imposable(o.line_ids)" t-as="p">
+                                            <td style="padding-left:5px"><span t-esc="p[0]"/></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px">
+                                                <span t-esc="p[1]"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+                                                 <span t-field="o.worked_days_line_ids[0].number_of_days"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center">
+                                                    <span t-esc="'{0:,.0f}'.format(p[3]).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+                                                <span t-esc="p[4]"/>
+                                            </td>
+                                            <td style="text-align:right;border-left: 1px solid">
+                                                <span t-esc="'{0:,.0f}'.format(p[5]).replace(',', ' ')"/>
+                                            </td>
+                                            <td style="border-right:1px solid;text-align:right;padding-right:2px">
+
+                                            </td>
+                                            <td class="bpro_head_label_third"
+                                                style="text-align:right;padding-right:2px">
+                                            </td>
+                                        </tr>
+                                        <tr class="sous-totaux">
+                                            <td style="padding-left:5px"></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px">Total Imposables</td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center"></td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center"></td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center;border-right:1px solid;"></td>
+                                            <td style="text-align:right;border-top:1px solid;"><span t-esc="'{0:,.0f}'.format(o.total_imposable).replace(',', ' ')"/></td>
+                                            <td style="border-right:1px solid"></td>
+                                            <td class="bpro_head_label_third" style="text-align:right;padding-right:2px"></td>
+                                        </tr>
+
+                                        <tr class="bproll-espace-top" t-foreach="get_payslip_cotisation_patronal(o.line_ids)" t-as="p">
+                                            <td style="padding-left:5px"><span t-esc="p[0]"/></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px">
+                                                <span t-esc="p[1]"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+                                                 <span t-field="o.worked_days_line_ids[0].number_of_days"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center">
+                                                    <span t-esc="'{0:,.0f}'.format(p[3]).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+                                               <span t-esc="p[4]"/>
+                                            </td>
+                                            <td style="text-align:right;border-left: 1px solid">
+
+                                            </td>
+                                            <td style="border-right:1px solid;text-align:right;padding-right:2px">
+
+                                            </td>
+                                            <td class="bpro_head_label_third" style="text-align:right;padding-right:2px">
+                                                <span t-esc="'{0:,.0f}'.format(p[7]).replace(',', ' ')"/>
+                                            </td>
+
+                                        </tr>
+                                        <tr class="bproll-espace-top" t-foreach="get_payslip_cotisation_salary(o.line_ids)" t-as="p">
+                                            <td style="padding-left:5px"><span t-esc="p[0]"/></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px">
+                                                <span t-esc="p[1]"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+                                                 <span t-field="o.worked_days_line_ids[0].number_of_days"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center">
+                                                    <span t-esc="'{0:,.0f}'.format(p[3]).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+                                               <span t-esc="p[4]"/>
+                                            </td>
+                                            <td style="text-align:right;border-left: 1px solid">
+
+                                            </td>
+                                            <td style="border-right:1px solid;text-align:right;padding-right:2px">
+                                            <span t-esc="'{0:,.0f}'.format(p[6]).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head_label_third" style="text-align:right;padding-right:2px">
+                                            </td>
+
+                                        </tr>
+
+                                        <tr class="sous-totaux">
+                                            <td style="padding-left:5px"></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px">Total Cotisations</td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center"></td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center"></td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center"></td>
+                                            <td style="text-align:left;border-left: 1px solid"></td>
+                                            <td style="border-right:1px solid;border-top:1px solid;text-align:right;padding-right:2px">
+                                                <span t-esc="'{0:,.0f}'.format(get_ir(o.line_ids)+get_charge_salariale(o.line_ids)).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head_label_third" style="text-align:right;padding-right:2px;border-top:1px solid">
+                                                <span t-esc="'{0:,.0f}'.format(o.total_charge_patronale).replace(',', ' ')"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="bproll-espace-top" t-foreach="get_payslip_non_imposable(o.line_ids)" t-as="p">
+                                            <td style="padding-left:5px"><span t-esc="p[0]"/></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px"><span t-esc="p[1]"/></td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+                                                <t t-if="o.worked_days_line_ids">
+                                                    <span t-field="o.worked_days_line_ids[0].number_of_days"/>
+                                                </t>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center">
+                                                <span t-esc="'{0:,.0f}'.format(p[3]).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second"
+                                                style="text-align:center">
+                                                <span t-esc="'{0:,.0f}'.format(p[4]).replace(',', ' ')"/>
+                                            </td>
+                                            <td style="text-align:right;border-left: 1px solid">
+                                                <span t-esc="'{0:,.0f}'.format(p[5]).replace(',', ' ')"/>
+                                            </td>
+                                            <td style="border-right:1px solid;text-align:right;padding-right:2px">
+
+                                            </td>
+                                            <td class="bpro_head_label_third"
+                                                style="text-align:right;padding-right:2px">
+                                            </td>
+                                        </tr>
+
+                                        <tr class="bproll-espace-top" t-foreach="get_payslip_retenu(o.line_ids)" t-as="p">
+                                            <td style="padding-left:5px"><span t-esc="p[0]"/></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px"><span t-esc="p[1]"/></td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center">
+
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center"><span t-esc="'{0:,.0f}'.format(p[3]).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center"><span t-esc="'{0:,.0f}'.format(p[4]).replace(',', ' ')"/></td>
+                                            <td style="text-align:left;border-left: 1px solid"></td>
+                                            <td style="border-right:1px solid;text-align:right;padding-right:2px"><span t-esc="'{0:,.0f}'.format(p[5]).replace(',', ' ')"/></td>
+                                            <td class="bpro_head_label_third" style="text-align:right;padding-right:2px"></td>
+                                        </tr>
+
+                                        <tr t-if="o.total_non_imposable !=0"  class="sous-totaux">
+                                            <td style="padding-left:5px"></td>
+                                            <td class="bpro_padding_left bpro_head_label_first" style="padding-left: 20px">Total Non Imposables</td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center"></td>
+                                            <td class="bpro_border_left bpro_head_label_third" style="text-align:center"></td>
+                                            <td class="bpro_border_left bpro_head_label_second" style="text-align:center"></td>
+                                            <td style="text-align:right;border-left: 1px solid;border-top:1px solid;padding-left:2px"><span t-esc="'{0:,.0f}'.format(o.total_non_imposable).replace(',', ' ')"/></td>
+                                            <td style="border-right:1px solid;text-align:right;padding-right:2px"></td>
+                                            <td class="bpro_head_label_third"></td>
+                                        </tr>
+
+                                        <tr class="bpro_content_padding_top"  t-foreach="get_payslip_lines(o.line_ids)"  t-as="l">
+                                           <td class="bpro_padding_left"></td>
+                                           <td style="border-right:1px solid">
+                                                <t t-if="l[0] == ''">
+                                                    <span class="bpro_blank_line">INVISBILE TEXT</span>
+                                                </t>
+                                                <t t-if="l[0] != ''">
+                                                    <span t-esc="l[0]"/>
+                                                </t>
+                                           </td>
+                                            <td style="border-right:1px solid"></td>
+                                           <td style="border-right:1px solid"></td>
+                                           <td style="border-right:1px solid"></td>
+                                           <td></td>
+                                           <td style="border-right:1px solid"></td>
+                                           <td></td>
+                                        </tr>
+                                        <tr style="border-botom:1px solid">
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="bpro_div_bottom">
+                                <div>
+                                    <table class="bpro_footer_table_second bpro-width">
+                                        <tr class="bpro_footer_border">
+                                            <td class="bpro_padding_year" style="border-top:1px solid">Cumul</td>
+                                            <td class="bpro_footer_third bpro_head bpro_border_left bpro_padding_top">Brut Total</td>
+                                            <td class="bpro_footer_third bpro_head bpro_border_left bpro_padding_top">Brut Imp.</td>
+                                            <td class="bpro_footer_third bpro_head bpro_border_left bpro_padding_top">Charges Pat.</td>
+                                            <td class="bpro_footer_third bpro_head bpro_border_left bpro_padding_top">Charges Sal.</td>
+                                            <td class="bpro_footer_third bpro_head bpro_border_left bpro_padding_top">Heures de travail</td>
+                                            <td colspan="2"
+                                                class="bpro_footer_fourth bpro_head bpro_border_left bpro_padding_top"
+                                                style="background-color: #C0C0C0">NET A PAYER
+                                            </td>
+                                        </tr>
+                                        <tr class="bpro_label_second">
+                                            <td class="bpro_padding_year">Mois</td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{0:,.0f}'.format(o.total_brut).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                              <span t-esc="'{0:,.0f}'.format(o.total_imposable).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{0:,.0f}'.format(o.total_charge_patronale).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{0:,.0f}'.format(get_ir(o.line_ids)+get_charge_salariale(o.line_ids)).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{:6.2f}'.format(get_number_work_days(o.worked_days_line_ids[0].number_of_days))"/>
+
+                                            </td>
+                                            <td colspan="2" rowspan="2" class="bpro_font_balance bpro_head"
+                                                style="background-color: #C0C0C0">
+                                                <span t-esc="'{0:,.0f}'.format(get_sal_net(o.line_ids)).replace(',', ' ')"/>
+                                            </td>
+                                        </tr>
+                                        <tr class="bpro_label_second">
+                                            <td class="bpro_padding_year">Année</td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{0:,.0f}'.format(get_total_brut_year(o)).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{0:,.0f}'.format(get_brut_imp_year(o)).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{0:,.0f}'.format(get_charge_patronale_year(o)).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{0:,.0f}'.format(get_charge_salariale_year(o)).replace(',', ' ')"/>
+                                            </td>
+                                            <td class="bpro_head bpro_padding_bottom_footer">
+                                                <span t-esc="'{:6.2f}'.format(get_work_time_year(o))"/>
+
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div style="padding-top:20px;font-style: italic;font-size:14px">
+                                Pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation
+                                de durée.
+                            </div>
+                        </div>
+                    </t>
+                    <div class="footer o_standard_footer">
+                        <div class="text-center" style="border-top: 1px solid black;">
+                            <ul class="list-inline mb4">
+                                <li class="list-inline-item">Téléphone:
+                                    <span t-field="o.employee_id.address_id.phone"/>
+                                </li>
+                                <li class="list-inline-item">Email:
+                                    <span t-field="o.employee_id.address_id.email"/>
+                                </li>
+                                <li class="list-inline-item">Web:
+                                    <span t-field="o.employee_id.address_id.website"/>
+                                </li>
+                            </ul>
+
+                            <div t-if="report_type == 'pdf'" class="text-muted">
+                                Page:
+                                <span class="page"/>
+                                /
+                                <span class="topage"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+            </t>
+        </template>
+    </data>
+</openerp>

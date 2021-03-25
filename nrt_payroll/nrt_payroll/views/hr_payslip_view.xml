@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_payslip_run_form_inherit_batch_pay" model="ir.ui.view">
+            <field name="name">hr.payslip.run.form.inherit.batch.pay</field>
+            <field name="model">hr.payslip.run</field>
+            <field name="inherit_id" ref="hr_payroll.hr_payslip_run_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//header" position="inside">
+                        <button name="validate_payslip"
+                                type="object" string="Confirmer" states="draft"
+                                class="oe_highlight"/>
+                        <button name="pay_payslip"
+                                type="object"
+                                string="Comptabiliser"
+                                states="validate"
+                                groups="account.group_account_manager"
+                                class="oe_highlight"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- affiche amount par defaut -->
+        <record id="view_hr_payslip_line_pivot" model="ir.ui.view">
+            <field name="name">hr.payslip.line.pivot</field>
+            <field name="model">hr.payslip.line</field>
+            <field name="arch" type="xml">
+                <pivot string="Lignes de paie">
+                    <field name="total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="hr_payslip_form_inherit" model="ir.ui.view">
+            <field name="name">hr.payslip.form.inherit</field>
+            <field name="model">hr.payslip</field>
+            <field name="priority">30</field>
+            <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+            <field name="arch" type="xml">
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+
+                    <button
+                            name="%(payslip_details_report)d"
+                            class="oe_stat_button"
+                            icon="fa-file"
+                            type="action" string="Imprimer"
+
+                           >
+                    </button>
+                </xpath>
+
+
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="typePaiement" attrs="{'required': True}"/>
+                    <field name="seniority_char"/>
+                    <field name="nb_part_of_payslip"/>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page/field/tree/field[@name='number_of_hours']"
+                       position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page/field/tree/field[@name='contract_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+
+                <xpath expr="//form/sheet/notebook/page/field[2]/tree/field[@name='contract_id']" position="attributes">
+                    <attribute name="groups">base.group_system</attribute>
+                </xpath>
+
+                <xpath expr="//form/header/button[1]" position="attributes">
+                    <attribute name="states">validate</attribute>
+                </xpath>
+
+                <xpath expr="//form/header/field[1]" position="attributes">
+                    <attribute name="statusbar_visible">draft,validate,confirm</attribute>
+                </xpath>
+
+                <xpath expr="//form/header/button[@name='action_payslip_done']" position="after">
+                    <button string="Valider" name="action_payslip_validate" states="draft" type="object"
+                            class="oe_highlight"/>
+                </xpath>
+
+                <xpath expr="//form/header/button[@name='action_payslip_done']" position="after">
+                    <button string="BROUILLON" name="action_payslip_draft" states="validate" type="object"
+                            class="oe_highlight"/>
+                </xpath>
+
+                <xpath expr="//form/header/button[@name='action_payslip_done']" position="replace">
+                    <button string="Clôturer" name="action_payslip_done" states="validate" type="object"
+                            class="oe_highlight"/>
+                </xpath>
+
+            </field>
+        </record>
+
+    </data>
+</odoo>
