@@ -648,7 +648,7 @@ class HrPayslipLine(models.Model):
     num_passport = fields.Char('N° Passeport', related='employee_id.passport_id', store=True)
     civility = fields.Selection('Civilité', related='employee_id.marital', store=True)
     gender = fields.Selection('Sexe',related='employee_id.gender', store=True)
-    address = fields.Char('Adresse', related='employee_id.address', store=True)
+    address = fields.Char('Adresse', store=True)
     number_children = fields.Integer('Nombre enfant(s)', related='employee_id.children', store=True)
     nb_part = fields.Float('Nombre de parts sociales', related='employee_id.nb_part', store=True)
     nationality = fields.Many2one(related='employee_id.country_id', string='Nationalité', store=True)

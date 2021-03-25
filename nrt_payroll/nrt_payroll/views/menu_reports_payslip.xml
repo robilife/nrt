@@ -6,7 +6,7 @@
         <menuitem id="menu_nrt_payroll_reporting"
           name="Rapports"
           parent="hr_payroll.menu_hr_payroll_root"
-                  groups="nrt_hr_base.group_nrt_adminin_personnel"
+
           sequence="201"/>
 
           <menuitem

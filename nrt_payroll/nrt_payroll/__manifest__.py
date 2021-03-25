@@ -11,7 +11,7 @@
     'company': 'Optesis SA',
     'website': 'https://www.optesis.com',
     'depends': [
-                'base', 'hr', 'hr_payroll', 'hr_contract', 'hr_holidays','hr_payroll_account','nrt_hr_base','web'
+                'base', 'hr', 'hr_payroll', 'hr_contract', 'hr_holidays','hr_payroll_account','web'
                 ],
     'data': [
         'security/ir.model.access.csv',
