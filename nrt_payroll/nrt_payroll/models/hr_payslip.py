@@ -251,8 +251,8 @@ class HrPayslip(models.Model):
 
                     [obj.write({'amount': round(ir_payslip - (ir_annuel - ir_recal_annuel))}) for obj in payslip.line_ids if obj.code == "C2170"]
 
-                else:
-                    [obj.write({'amount': round(ir_payslip)}) for obj in payslip.line_ids if obj.code == "C2170"]
+            else:
+                [obj.write({'amount': round(ir_payslip)}) for obj in payslip.line_ids if obj.code == "C2170"]
 
             # defalquer ir_fin du net
             ir_fin = 0.0
