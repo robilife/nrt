@@ -139,7 +139,7 @@ class HrPayslip(models.Model):
             if len(two_last_payslip) > 1:
                 if two_last_payslip[1].nb_part_of_payslip != payslip.employee_id.nb_part:
                     ir_changed = 1
-                    for line in self.env['hr.payslip'].search([('employee_id', '=', payslip.employee_id.id)], limit=12):
+                    for line in self.env['hr.payslip'].search([('employee_id', '=', payslip.employee_id.id)], order="id desc", limit=12):
                         if datetime.strptime(str(line.date_from), server_dt).year == year:
                             cumul_tranche_ipm = 0.0
                             deduction = 0.0
